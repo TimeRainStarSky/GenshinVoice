@@ -6,6 +6,12 @@ out_path = sys.argv[1]
 id = int(sys.argv[2])
 text = ' '.join(sys.argv[3:])
 
+import re
+import cn2an
+numbers = re.findall(r'\d+(?:\.?\d+)?', text)
+for number in numbers:
+  text = text.replace(number, cn2an.an2cn(number), 1)
+
 print('发言人：', id, '\n发言内容：', text, '\n正在加载模型……', sep='')
 
 import os
@@ -55,4 +61,4 @@ with torch.no_grad():
 print('正在输出到文件：', out_path, sep='')
 write(out_path, hps_mt.data.sampling_rate, audio_mt)
 
-print('生成用时：', time.time() - starttime, 's', sep='')
+print('生成用时：', time.time() - starttime, '秒', sep='')

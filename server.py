@@ -1,6 +1,8 @@
 import flask
 server = flask.Flask(__name__)
 import sys
+import re
+import cn2an
 
 import os
 import json
@@ -51,6 +53,10 @@ def main():
   if not user_id or user_id in blacklist:
     return '无效请求'
   try:
+    numbers = re.findall(r'\d+(?:\.?\d+)?', text)
+    for number in numbers:
+      text = text.replace(number, cn2an.an2cn(number), 1)
+
     stn_tst_mt = get_text(text, hps_mt)
 
     with torch.no_grad():
